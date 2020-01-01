@@ -5,39 +5,19 @@
 				<div class="product-wrapper">
 					<div class="menu">
 						<ul>
-							<li @mouseenter="currentindex=1" class="one">
-								<a :class="{'selected' : currentindex === 1}" ref="one" href="#">Beschrijving</a>
+							<li v-for="(item,index) in menuItems" :key="index" @mouseenter="currentindex=index+1">
+								<a :class="{'selected' : currentindex === index+1}" :ref="'element' + (index+1)">{{item}}</a>
 							</li>
-							<li @mouseenter="currentindex=2" class="two">
-								<a :class="{'selected' : currentindex === 2}" ref="two" href="#">Fitting</a>
-							</li>
-							<li @mouseenter="currentindex=3" class="three">
-								<a :class="{'selected' : currentindex === 3}" ref="three" href="#">Levering</a>
-							</li>
-							<li @mouseenter="currentindex=4" class="four">
-								<a :class="{'selected' : currentindex === 4}" ref="four" href="#">Jouw Mening</a>
-							</li>
-							<hr :style="{ margin: computedMargin, width: computedWidth + 'px'}" />
 						</ul>
+						<hr :style="{ margin: computedMargin, width: computedWidth +'px'}" />
 					</div>
 					<div class="text-wrapper">
 						<transition name="slide">
 							<div v-if="currentindex == 1" class="beschrijving">
-								<div class="material-wrapper">
-									<p>MATERIAAL & WASVOORSCHRIFT</p>
-									<p>Materiaal buitenlaag:</p>
-									<p>Materiaalverwerking:</p>
-									<p>Wasvoorschrift:</p>
-								</div>
-								<div class="over-the-product-wrapper">
-									<p>ALLES OVER DIT PRODUCT</p>
-									<p>Halslijn / kraag:</p>
-									<p>Patroon:</p>
-									<p>Artikelnummer:</p>
-								</div>
-								<div class="author-wrapper">
-									<p>CARIN WESTER</p>
-								</div>
+								<p>MATERIAAL & WASVOORSCHRIFT</p>
+								<p>Materiaal buitenlaag:</p>
+								<p>Materiaalverwerking:</p>
+								<p>Wasvoorschrift:</p>
 							</div>
 						</transition>
 						<transition name="slide">
@@ -80,30 +60,41 @@ export default {
 	data() {
 		return {
 			currentindex: 1,
-			width: 0,
-			isMounted: false
+			isMounted: false,
+			menuItems: ["beschrijving", "fitting", "together", "WITHMEISYOU"]
 		};
 	},
 	methods: {
-		getElementWidth(ref) {
-			return "" + this.$refs[ref].clientWidth;
+		getElementWidth(index) {
+			return this.$refs["element" + index][0].clientWidth;
+		},
+		getAllElementsWidth(numberOfElements) {
+			let i = 1;
+			let width = 0;
+			while (i <= numberOfElements) {
+				width += this.getElementWidth(i);
+				i++;
+			}
+			return width;
 		}
 	},
 	computed: {
 		computedMargin() {
-			if (this.currentindex == 2) return "0 0 0 calc(25% + 30px)";
-			else if (this.currentindex == 3) return "0 0 0 calc(50% + 23.08px)";
-			else if (this.currentindex == 4) return "0 0 0 calc(75% + 10.08px)";
-			return "0 0 0 8px";
+			if (this.currentindex > 1) {
+				return (
+					"0 0 0 " +
+					"calc(" +
+					this.getAllElementsWidth(this.currentindex - 1) +
+					"px + " +
+					(this.currentindex - 1) * 26 +
+					"px"
+				);
+			}
+			return "0 0 0 0";
 		},
 		computedWidth() {
 			if (this.isMounted) {
-				if (this.currentindex == 2) return this.getElementWidth("two");
-				else if (this.currentindex == 3)
-					return this.getElementWidth("three");
-				else if (this.currentindex == 4)
-					return this.getElementWidth("four");
-				return this.getElementWidth("one");
+				return this.getElementWidth(this.currentindex);
 			}
 			return null;
 		}
@@ -116,22 +107,41 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.beschrijving,
-.fitting,
-.levering,
-.mening {
-	position: absolute;
-	top: 0;
-	left: 0;
+* {
+	box-sizing: border-box;
 }
-.text-wrapper {
-	position: relative;
-	min-width: 100px;
-	min-height: 100px;
+ul {
+	max-width: 500px;
+	padding: 0;
+	margin: 0;
+	display: flex;
+}
+ul li {
+	list-style: none;
+	text-align: center;
+	margin-right: 26px;
+	align-self: flex-start;
+}
+a {
+	text-transform: uppercase;
+	font-size: 12px;
+	display: inline-block;
+	text-decoration: none;
+	color: #999;
+	font-weight: bold;
+}
+hr {
+	height: 3px;
+	background: #ff6900;
+	border: none;
+	transition: all 0.4s ease;
+}
+.selected {
+	color: #1a1a1a;
 }
 .slide-leave-active,
 .slide-enter-active {
-	transition: 0.7s;
+	transition: 0.4s;
 }
 .slide-enter {
 	transform: translate(200%, 0);
@@ -158,6 +168,9 @@ export default {
 	min-width: 80px;
 }
 .text-wrapper {
+	position: relative;
+	min-width: 100px;
+	min-height: 100px;
 	margin-top: 24px;
 	overflow: hidden;
 }
@@ -172,11 +185,13 @@ export default {
 	margin-left: 15%;
 	padding-top: 24px;
 }
-.selected {
-	color: #1a1a1a;
-}
-* {
-	box-sizing: border-box;
+.beschrijving,
+.fitting,
+.levering,
+.mening {
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 .product-info-container {
 	max-width: 100%;
@@ -201,31 +216,5 @@ export default {
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
-}
-ul {
-	width: 430px;
-	padding: 0;
-	margin: 0;
-}
-ul li {
-	display: inline-block;
-	text-align: center;
-	width: 25%;
-}
-a {
-	text-transform: uppercase;
-	font-size: 12px;
-	display: inline-block;
-
-	text-decoration: none;
-	color: #999;
-	font-weight: bold;
-}
-hr {
-	height: 3px;
-
-	background: #ff6900;
-	border: none;
-	transition: all 0.4s ease;
 }
 </style>
