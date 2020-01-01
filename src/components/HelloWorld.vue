@@ -12,7 +12,7 @@
 						<hr :style="{ margin: computedMargin, width: computedWidth +'px'}" />
 					</div>
 					<div class="text-wrapper">
-						<transition name="slide">
+						<transition :name="computedTransition">
 							<div v-if="currentindex == 1" class="beschrijving">
 								<p>MATERIAAL & WASVOORSCHRIFT</p>
 								<p>Materiaal buitenlaag:</p>
@@ -20,7 +20,7 @@
 								<p>Wasvoorschrift:</p>
 							</div>
 						</transition>
-						<transition name="slide">
+						<transition :name="computedTransition">
 							<div v-if="currentindex == 2" class="fitting">
 								<p>Lichaamslengte model:</p>
 								<p>Lengte:</p>
@@ -29,13 +29,13 @@
 								<p>Totale lengte:</p>
 							</div>
 						</transition>
-						<transition name="slide">
+						<transition :name="computedTransition">
 							<div v-if="currentindex == 3" class="levering">
 								<p>Gratis verzending en retour</p>
 								<p>100 dagen recht op retour</p>
 							</div>
 						</transition>
-						<transition name="slide">
+						<transition :name="computedTransition">
 							<div v-if="currentindex == 4" class="mening">
 								<p>Dit artikel heeft nog geen beoordelingen. Wil jij de eerste zijn?</p>
 								<button class="mening-button">
@@ -60,9 +60,11 @@ export default {
 	data() {
 		return {
 			currentindex: 1,
+			previousindex: 1,
 			isMounted: false,
 			menuItems: ["beschrijving", "fitting", "together", "WITHMEISYOU"],
-			images: []
+			images: [],
+			slideDirection: "left"
 		};
 	},
 	methods: {
@@ -81,6 +83,8 @@ export default {
 		changeIndex(index) {
 			clearInterval(this.interval);
 			if (index > this.currentindex) {
+				this.previousindex = this.currentindex;
+				this.slideDirection = "left";
 				this.interval = setInterval(() => {
 					this.currentindex++;
 					if (this.currentindex === index) {
@@ -89,6 +93,8 @@ export default {
 				}, 20);
 			}
 			if (index < this.currentindex) {
+				this.previousindex = this.currentindex;
+				this.slideDirection = "right";
 				this.interval = setInterval(() => {
 					this.currentindex--;
 					if (this.currentindex === index) {
@@ -96,6 +102,9 @@ export default {
 					}
 				}, 20);
 			}
+		},
+		assignSlide(x) {
+			this.lastSlide = x;
 		}
 	},
 	computed: {
@@ -117,6 +126,10 @@ export default {
 				return this.getElementWidth(this.currentindex);
 			}
 			return null;
+		},
+		computedTransition() {
+			if (this.slideDirection == "left") return "slide-left";
+			else return "slide-right";
 		}
 	},
 	mounted() {
@@ -164,15 +177,23 @@ hr {
 .selected {
 	color: #1a1a1a;
 }
-.slide-leave-active,
-.slide-enter-active {
+.slide-left-leave-active,
+.slide-left-enter-active,
+.slide-right-leave-active,
+.slide-right-enter-active {
 	transition: 0.4s;
 }
-.slide-enter {
+.slide-left-enter {
 	transform: translate(200%, 0);
 }
-.slide-leave-to {
+.slide-right-enter {
+	transform: translate(-200%, 0);
+}
+.slide-left-leave-to {
 	transform: translate(-300%, 0);
+}
+.slide-right-leave-to {
+	transform: translate(300%, 0);
 }
 /*  */
 /*  */
