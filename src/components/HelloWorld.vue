@@ -102,9 +102,6 @@ export default {
 					}
 				}, 20);
 			}
-		},
-		assignSlide(x) {
-			this.lastSlide = x;
 		}
 	},
 	computed: {
@@ -143,6 +140,7 @@ export default {
 * {
 	box-sizing: border-box;
 }
+
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
@@ -190,10 +188,10 @@ hr {
 	transform: translate(-200%, 0);
 }
 .slide-left-leave-to {
-	transform: translate(-300%, 0);
+	transform: translate(-350%, 0);
 }
 .slide-right-leave-to {
-	transform: translate(300%, 0);
+	transform: translate(350%, 0);
 }
 /*  */
 /*  */
