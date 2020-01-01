@@ -5,7 +5,7 @@
 				<div class="product-wrapper">
 					<div class="menu">
 						<ul>
-							<li v-for="(item,index) in menuItems" :key="index" @mouseenter="currentindex=index+1">
+							<li v-for="(item,index) in menuItems" :key="index" @mouseenter="changeIndex(index+1)">
 								<a :class="{'selected' : currentindex === index+1}" :ref="'element' + (index+1)">{{item}}</a>
 							</li>
 						</ul>
@@ -61,7 +61,8 @@ export default {
 		return {
 			currentindex: 1,
 			isMounted: false,
-			menuItems: ["beschrijving", "fitting", "together", "WITHMEISYOU"]
+			menuItems: ["beschrijving", "fitting", "together", "WITHMEISYOU"],
+			images: []
 		};
 	},
 	methods: {
@@ -76,6 +77,25 @@ export default {
 				i++;
 			}
 			return width;
+		},
+		changeIndex(index) {
+			clearInterval(this.interval);
+			if (index > this.currentindex) {
+				this.interval = setInterval(() => {
+					this.currentindex++;
+					if (this.currentindex === index) {
+						clearInterval(this.interval);
+					}
+				}, 20);
+			}
+			if (index < this.currentindex) {
+				this.interval = setInterval(() => {
+					this.currentindex--;
+					if (this.currentindex === index) {
+						clearInterval(this.interval);
+					}
+				}, 20);
+			}
 		}
 	},
 	computed: {
@@ -110,6 +130,10 @@ export default {
 * {
 	box-sizing: border-box;
 }
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
 ul {
 	max-width: 500px;
 	padding: 0;
@@ -136,6 +160,7 @@ hr {
 	border: none;
 	transition: all 0.4s ease;
 }
+
 .selected {
 	color: #1a1a1a;
 }
@@ -149,6 +174,9 @@ hr {
 .slide-leave-to {
 	transform: translate(-300%, 0);
 }
+/*  */
+/*  */
+/*  */
 .button-text-container {
 	display: flex;
 	align-items: center;
@@ -212,9 +240,5 @@ hr {
 	background-repeat: no-repeat;
 	background-position: center top;
 	background-image: url("https://mosaic01.ztat.net/vgs/static/pdp_review_3.jpg");
-}
-.container {
-	max-width: 1200px;
-	margin: 0 auto;
 }
 </style>
