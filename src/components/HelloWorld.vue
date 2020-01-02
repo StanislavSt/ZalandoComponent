@@ -135,12 +135,10 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 * {
 	box-sizing: border-box;
 }
-
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
@@ -184,11 +182,11 @@ hr {
 .slide-left-enter {
 	transform: translate(200%, 0);
 }
-.slide-right-enter {
-	transform: translate(-200%, 0);
-}
 .slide-left-leave-to {
 	transform: translate(-350%, 0);
+}
+.slide-right-enter {
+	transform: translate(-200%, 0);
 }
 .slide-right-leave-to {
 	transform: translate(350%, 0);
