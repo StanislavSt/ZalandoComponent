@@ -4,9 +4,11 @@
 			<div class="product-info">
 				<div class="menu">
 					<ul>
-						<li v-for="(item,index) in menuItems" :key="index" @mouseenter="changeIndex(index+1)">
-							<a :class="{'selected' : currentindex === index+1}" :ref="'element' + (index+1)">{{item}}</a>
-						</li>
+						<div v-for="(item,index) in menuItems" :key="index" class="list-item">
+							<li @mouseenter="changeIndex(index+1)">
+								<a :class="{'selected' : currentindex === index+1}" :ref="'element' + (index+1)">{{item}}</a>
+							</li>
+						</div>
 					</ul>
 					<hr :style="{ margin: computedMargin, width: computedWidth +'px'}" />
 				</div>
@@ -142,6 +144,9 @@ export default {
 	height: 100%;
 	width: 100%;
 }
+.cluster-divider {
+	display: none;
+}
 /*Menu */
 ul {
 	max-width: 500px;
@@ -150,16 +155,17 @@ ul {
 	display: flex;
 	align-items: flex-start;
 }
-ul > li {
+ul li {
 	list-style: none;
 	margin-right: 26px;
 }
-ul > li > a {
+ul li a {
 	text-transform: uppercase;
 	font-size: 12px;
 	display: inline-block;
 	color: #999;
 	font-weight: bold;
+	cursor: pointer;
 }
 .selected {
 	color: #1a1a1a;
@@ -188,5 +194,70 @@ hr {
 }
 .slide-right-leave-to {
 	transform: translate(350%, 0);
+}
+@media screen and (max-width: 920px) {
+	.product-info {
+		margin-left: 5%;
+	}
+}
+@media screen and (max-width: 800px) {
+	.slide-left-leave-active,
+	.slide-left-enter-active,
+	.slide-right-leave-active,
+	.slide-right-enter-active {
+		transition: 0;
+	}
+	.slide-left-enter,
+	.slide-left-leave-to,
+	.slide-right-enter,
+	.slide-right-leave-to {
+		transform: none;
+	}
+	.list-item {
+		height: 100%;
+		width: 100%;
+		border-bottom: solid 1px #ddd;
+		display: flex;
+	}
+	.container {
+		display: block;
+		height: 300px;
+		width: 100%;
+	}
+	.product-info-wrapper {
+		width: 100%;
+		height: 100%;
+	}
+	.product-image {
+		display: none;
+	}
+	.product-info {
+		padding: 0;
+		margin: 0;
+		width: 100%;
+	}
+	hr {
+		display: none;
+	}
+	ul {
+		height: 100%;
+		max-width: 800px;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	ul li {
+		margin: auto 0;
+		width: 100%;
+	}
+	ul li a {
+		color: black;
+		margin-left: 1rem;
+	}
+	.menu {
+		height: 100%;
+	}
+	.text-wrapper {
+		display: none;
+	}
 }
 </style>
